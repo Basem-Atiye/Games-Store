@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout — GameNova Store</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .checkout-grid { display: grid; gap: 24px; padding: 24px 0 48px; }
+    @media (min-width: 768px) { .checkout-grid { grid-template-columns: 1fr 320px; } }
+    .checkout-section { background: var(--glass); border: 1px solid rgba(255,255,255,0.03); border-radius: var(--radius); padding: 18px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 6px; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; background: var(--glass-2); border: 1px solid rgba(255,255,255,0.04); color: inherit; border-radius: 8px; }
+    .form-row { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .cart-item { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .cart-item img { width: 80px; height: 60px; object-fit: cover; border-radius: 6px; }
+    .cart-total { margin-top: 12px; text-align: right; }
+    .steps { display: flex; gap: 2px; margin-bottom: 24px; }
+    .step { flex: 1; padding: 12px; text-align: center; background: var(--glass-2); color: var(--muted); }
+    .step.active { background: var(--glass); color: var(--accent); }
+    .step.done { background: var(--glass); color: var(--accent-2); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">GameNova</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="steps">
+      <div class="step done">Cart</div>
+      <div class="step active">Details</div>
+      <div class="step">Payment</div>
+      <div class="step">Confirmation</div>
+    </div>
+
+    <div class="checkout-grid">
+      <div>
+        <section class="checkout-section">
+          <h2>Contact Details</h2>
+          <form id="checkoutForm">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" required placeholder="you@example.com">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" required>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" required>
+              </div>
+            </div>
+
+            <h2 style="margin: 24px 0 16px">Payment Details</h2>
+            <div class="form-group">
+              <label for="card">Card Number</label>
+              <input type="text" id="card" required placeholder="4111 1111 1111 1111" maxlength="19">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expiry">Expiry (MM/YY)</label>
+                <input type="text" id="expiry" required placeholder="MM/YY" maxlength="5">
+              </div>
+              <div class="form-group">
+                <label for="cvc">CVC</label>
+                <input type="text" id="cvc" required placeholder="123" maxlength="3">
+              </div>
+            </div>
+
+            <button type="submit" class="btn primary" style="width:100%;margin-top:24px">Complete Purchase</button>
+          </form>
+        </section>
+      </div>
+
+      <div>
+        <section class="checkout-section">
+          <h2>Order Summary</h2>
+          <div id="cartItems"></div>
+          <div class="cart-total">
+            <div class="muted">Subtotal: <strong id="subtotal">$0.00</strong></div>
+            <div class="muted">Tax (10%): <strong id="tax">$0.00</strong></div>
+            <div style="margin-top:8px">Total: <strong id="total">$0.00</strong></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div id="successModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-panel" role="document">
+      <div style="text-align:center;padding:24px">
+        <div style="font-size:48px;margin-bottom:12px">🎮</div>
+        <h2>Thank you for your order!</h2>
+        <p class="muted">Order #<span id="orderNumber"></span></p>
+        <p>We've sent a confirmation email with your order details.</p>
+        <button onclick="window.location.href='index.html'" class="btn primary" style="margin-top:24px">Return to Store</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Checkout Flow - jQuery Version
+    (function(){
+      // Load cart
+      var cart = JSON.parse(localStorage.getItem('gamenova_cart')||'{}');
+      var games = [
+        {id:1,title:'Neon Drift',price:14.99,img:'assets/cover-1.svg'},
+        {id:2,title:'Starfarer Odyssey',price:29.99,img:'assets/cover-2.svg'},
+        {id:3,title:'Mystic Puzzle',price:7.99,img:'assets/cover-3.svg'},
+        {id:4,title:'Dungeon Tap',price:9.99,img:'assets/cover-4.svg'},
+        {id:5,title:'Shadowline',price:19.99,img:'assets/cover-5.svg'},
+        {id:6,title:'Pixel Ranch',price:12.99,img:'assets/cover-6.svg'}
+      ];
+
+      // Render cart
+      var $cartEl = $('#cartItems');
+      var subtotal = 0;
+      $.each(cart, function(id, qty) {
+        var game = null;
+        for(var i = 0; i < games.length; i++){
+          if(games[i].id === Number(id)){ game = games[i]; break; }
+        }
+        if(!game) return;
+        var total = game.price * qty;
+        subtotal += total;
+        var $div = $('<div>').addClass('cart-item');
+        var inner = '';
+        inner += '<img src="' + game.img + '" alt="' + game.title + '">';
+        inner += '<div style="flex:1">';
+        inner += '<div>' + game.title + '</div>';
+        inner += '<div class="muted">$' + game.price.toFixed(2) + ' × ' + qty + '</div>';
+        inner += '</div>';
+        inner += '<div>$' + total.toFixed(2) + '</div>';
+        $div.html(inner);
+        $cartEl.append($div);
+      });
+
+      var tax = subtotal * 0.1;
+      var total = subtotal + tax;
+      $('#subtotal').text('$' + subtotal.toFixed(2));
+      $('#tax').text('$' + tax.toFixed(2));
+      $('#total').text('$' + total.toFixed(2));
+
+      // Form handling
+      var $form = $('#checkoutForm');
+      var $card = $('#card');
+      var $expiry = $('#expiry');
+      var $successModal = $('#successModal');
+
+      // Simple input formatting
+      $card.on('input', function() {
+        var v = $(this).val().replace(/\D/g, '');
+        $(this).val(v.replace(/(\d{4})/g, '$1 ').trim());
+      });
+
+      $expiry.on('input', function() {
+        var v = $(this).val().replace(/\D/g, '');
+        if(v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
+        $(this).val(v);
+      });
+
+      $form.on('submit', function(e) {
+        e.preventDefault();
+        // Mock validation
+        var cardNum = $card.val().replace(/\s/g, '');
+        if(cardNum.length !== 16) {
+          alert('Please enter a valid 16-digit card number');
+          return;
+        }
+        if($expiry.val().length !== 5) {
+          alert('Please enter a valid expiry date (MM/YY)');
+          return;
+        }
+        // Success flow
+        var orderNum = Math.random().toString(36).slice(2, 8).toUpperCase();
+        $('#orderNumber').text(orderNum);
+        $successModal.attr('aria-hidden', 'false');
+        // Clear cart
+        localStorage.removeItem('gamenova_cart');
+      });
+    })();
+  </script>
+</body>
+</html>
+</body>
+</html>

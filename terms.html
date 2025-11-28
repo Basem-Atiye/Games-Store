@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terms of Service — GameNova</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .page-hero{
+      padding:40px 0 28px
+    }
+    .terms-grid{
+      display:grid;
+      grid-template-columns:1fr 320px;
+      gap:28px;
+      padding:20px 0
+    }
+    @media(max-width:880px){ 
+      .terms-grid{
+        grid-template-columns:1fr
+      } 
+    }
+    .doc-card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:18px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.03)
+    }
+    .toc{
+      position:sticky;
+      top:84px
+    }
+    .toc a{
+      display:block;
+      padding:8px 10px;
+      border-radius:8px;
+      color:var(--muted);
+      text-decoration:none
+    }
+    .toc a:hover{
+      color:var(--accent)
+    }
+    .lead{
+      color:var(--muted);
+      margin-bottom:14px
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">GameNova</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-hero">
+      <div class="hero-inner">
+        <div>
+          <h1>Terms of Service</h1>
+          <p class="lead">Last updated: October 31, 2025 — Read these terms before using the demo site.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <div class="terms-grid">
+      <article class="doc-card">
+        <h2 id="agreement">Agreement to Terms</h2>
+        <p>These Terms of Service govern your use of the GameNova demo site. By accessing or using the site you agree to be bound by these Terms.</p>
+
+        <h3 id="use">Acceptable Use</h3>
+        <p>You may use this demo site only for lawful purposes. Prohibited activities include attempting to inject malicious content, tampering with the site, or using it to harvest personal data.</p>
+
+        <h3 id="disclaimer">Disclaimer</h3>
+        <p>This site is provided "as-is" for demonstration purposes. No warranty is provided. GameNova is not a real store and no real purchases are processed.</p>
+
+        <h3 id="liability">Limitation of Liability</h3>
+        <p>To the maximum extent permitted by law, the site owners are not liable for any damages arising from the use of this demo.</p>
+
+        <h3 id="law">Governing Law</h3>
+        <p>These Terms are governed by the laws of the jurisdiction in which the site owner operates. This is a demo and not a substitute for legal advice.</p>
+
+        <p style="margin-top:20px"><a href="index.html" class="btn outline">Return to Store</a></p>
+      </article>
+
+      <aside class="toc">
+        <div class="doc-card">
+          <h3>On this page</h3>
+          <nav>
+            <a href="#agreement">Agreement to Terms</a>
+            <a href="#use">Acceptable Use</a>
+            <a href="#disclaimer">Disclaimer</a>
+            <a href="#liability">Limitation of Liability</a>
+            <a href="#law">Governing Law</a>
+          </nav>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> GameNova</p>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>$(function(){ $('#year').text(new Date().getFullYear()); });</script>
+</body>
+</html>

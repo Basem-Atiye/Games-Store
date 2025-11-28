@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact — GameNova</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    .contact-card{max-width:760px;margin:32px auto;padding:18px;border-radius:12px;background:var(--glass);border:1px solid rgba(255,255,255,0.03)}
+    .form-group{margin-bottom:12px}
+    .form-group label{display:block;margin-bottom:6px}
+    .form-group input,.form-group textarea{width:100%;padding:10px;border-radius:8px;background:var(--glass-2);border:1px solid rgba(255,255,255,0.03);color:inherit}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html">GameNova</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="contact-card">
+      <h1>Contact Us</h1>
+      <p class="muted">Have feedback or questions about this demo? Send a message and it will be stored locally in your browser (client-side only).</p>
+
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="cname">Name</label>
+          <input id="cname" required />
+        </div>
+        <div class="form-group">
+          <label for="cemail">Email</label>
+          <input id="cemail" type="email" required />
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" rows="6" required></textarea>
+        </div>
+        <div style="display:flex;gap:12px">
+          <button type="submit" class="btn primary">Send</button>
+          <button type="button" id="clearBtn" class="btn outline">Clear saved messages</button>
+        </div>
+      </form>
+
+      <div id="sentList" style="margin-top:18px"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> GameNova</p>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Contact Form - jQuery Version (beginner-friendly)
+    (function(){
+      var $form = $('#contactForm');
+      var $sentList = $('#sentList');
+      var $clearBtn = $('#clearBtn');
+      var KEY = 'gamenova_contacts';
+
+      function load(){
+        var data = JSON.parse(localStorage.getItem(KEY) || '[]');
+        renderList(data);
+      }
+
+      function renderList(arr){
+        if(!arr.length) {
+          $sentList.html('<p class="muted">No saved messages.</p>');
+          return;
+        }
+        var html = '';
+        for(var i = 0; i < arr.length; i++){
+          var m = arr[i];
+          html += '<div style="border-top:1px solid rgba(255,255,255,0.03);padding:12px 0">';
+          html += '<div style="font-weight:600">' + escapeHtml(m.name) + ' <span class="muted">(' + escapeHtml(m.email) + ')</span></div>';
+          html += '<div class="muted" style="font-size:13px">' + new Date(m.ts).toLocaleString() + '</div>';
+          html += '<div style="margin-top:8px">' + escapeHtml(m.message) + '</div>';
+          html += '</div>';
+        }
+        $sentList.html(html);
+      }
+
+      function escapeHtml(s){
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      $form.on('submit', function(e){
+        e.preventDefault();
+        var name = $('#cname').val().trim();
+        var email = $('#cemail').val().trim();
+        var message = $('#message').val().trim();
+        if(!name || !email || !message) {
+          alert('Please fill all fields');
+          return;
+        }
+        var arr = JSON.parse(localStorage.getItem(KEY) || '[]');
+        arr.unshift({name: name, email: email, message: message, ts: Date.now()});
+        localStorage.setItem(KEY, JSON.stringify(arr));
+        load();
+        $form[0].reset();
+        alert('Message saved locally.');
+      });
+
+      $clearBtn.on('click', function(){
+        if(!confirm('Clear all saved messages from this browser?')) return;
+        localStorage.removeItem(KEY);
+        load();
+      });
+
+      load();
+      $('#year').text(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>
+</body>
+</html>
