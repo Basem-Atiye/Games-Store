@@ -691,6 +691,12 @@ body > * {
   box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
   transition: var(--transition);
 }
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
 .card:hover .thumb {
   transform: scale(1.05);

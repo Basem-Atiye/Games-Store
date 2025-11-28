@@ -27,32 +27,32 @@
 
   let lastFocused = null;
 
-  function loadGames() {
-    // First try inline JSON in the page (no AJAX)
-    try {
-      var el = document.getElementById('gamenova-data');
-      if(el){
-        var txt = el.textContent || el.innerText || '';
-        var parsed = JSON.parse(txt);
-        if(parsed && Array.isArray(parsed.games)){
-          GAMES = parsed.games;
-          init();
-          return;
-        }
-      }
-    } catch(e){
-      console.error('Failed to parse inline data', e);
-    }
-
-    if(window.GAMENOVA_DATA && Array.isArray(window.GAMENOVA_DATA.games)){
-      GAMES = window.GAMENOVA_DATA.games;
-      init();
+async function loadGames() {
+  try {
+    const response = await fetch('data/games.json');
+    if (!response.ok) {
+      console.error('Failed to fetch games.json. Status:', response.status);
       return;
     }
 
-    console.error('GAMENOVA_DATA not found or invalid');
-    return;
+    const data = await response.json();
+
+    if (Array.isArray(data)) {
+      GAMES = data;
+    } else if (data.games && Array.isArray(data.games)) {
+      GAMES = data.games;
+    } else {
+      console.error('Invalid games.json format.');
+      return;
+    }
+
+    init();
+
+  } catch (err) {
+    console.error('Error loading games.json:', err);
   }
+}
+
 
   function init(){
     populateGenres();
