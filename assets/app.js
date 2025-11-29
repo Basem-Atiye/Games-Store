@@ -5,6 +5,8 @@
     query: '',
     genre: 'all',
     sort: 'featured',
+    page: 1,
+    perPage: 12,
     cart: JSON.parse(localStorage.getItem('gamenova_cart') || '{}'),
     wishlist: JSON.parse(localStorage.getItem('gamenova_wl') || '{}')
   };
@@ -53,7 +55,6 @@
     }
   }
 
-
   function init() {
     populateGenres();
     bind();
@@ -73,88 +74,125 @@
   }
 
   function bind() {
-    $searchInput.on('input', function () {
-      state.query = $(this).val().toLowerCase();
-      render();
-    });
 
-    $genreFilter.on('change', function () {
-      state.genre = $(this).val();
-      render();
-    });
+  $searchInput.on('input', function () {
+    state.query = $(this).val().toLowerCase();
+    state.page = 1;
+    render();
+  });
 
-    $sortSelect.on('change', function () {
-      state.sort = $(this).val();
-      render();
-    });
+  $genreFilter.on('change', function () {
+    state.genre = $(this).val();
+    state.page = 1;
+    render();
+  });
 
-    $modalClose.on('click', closeModal);
-    $(window).on('click', function (e) {
-      if (e.target === $gameModal[0]) closeModal();
-    });
+  $sortSelect.on('change', function () {
+    state.sort = $(this).val();
+    render();
+  });
 
-    $(document).on('keydown', function (e) {
-      if (e.key === 'Escape') {
-        closeModal();
-        closeDrawers();
-      }
+  $('#nextPage').on('click', function () {
+    state.page++;
+    render();
+  });
 
-    $gamesGrid.on('click', 'button', function (e) {
-        const $btn = $(this);
-        const id = Number($btn.data('id'));
-        const action = $btn.data('action');
+  $('#prevPage').on('click', function () {
+    state.page--;
+    render();
+  });
 
-        if (action === 'view') openModal(id);
-        else if (action === 'cart') toggleCart(id);
-    });
+  $modalClose.on('click', closeModal);
 
+  $(window).on('click', function (e) {
+    if (e.target === $gameModal[0]) closeModal();
+  });
 
-    });
+  $(document).on('keydown', function (e) {
+    if (e.key === 'Escape') {
+      closeModal();
+      closeDrawers();
+    }
+  });
 
-    $('#cartBtn').on('click', function () { openDrawer('cart'); });
-    $('#wishlistBtn').on('click', function () { openDrawer('wish'); });
-    $('#cartClose').on('click', function () { closeDrawer('cart'); });
-    $('#wishClose').on('click', function () { closeDrawer('wish'); });
+  $gamesGrid.on('click', 'button', function (e) {
+    e.stopPropagation();
+    const id = Number($(this).data('id'));
+    const action = $(this).data('action');
 
+    if (action === 'view') openModal(id);
+    if (action === 'cart') toggleCart(id);
+  });
+
+  $gamesGrid.on('click', '.card', function () {
+    const id = Number($(this).find('[data-id]').first().data('id'));
+    openModal(id);
+  });
+
+    $('#cartBtn').on('click', () => openDrawer('cart'));
+    $('#wishlistBtn').on('click', () => openDrawer('wish'));
+    $('#cartClose').on('click', () => closeDrawer('cart'));
+    $('#wishClose').on('click', () => closeDrawer('wish'));
     $('#diagBtn').on('click', runDiagnostics);
     $('#checkoutBtn').on('click', function () {
       window.location.href = 'checkout.html';
     });
   }
 
-  function render() {
-    let filtered = [];
-    for (let i = 0; i < GAMES.length; i++) {
-      let g = GAMES[i];
-      if (state.genre !== 'all' && g.genre !== state.genre) continue;
-      if (state.query) {
-        let hay = (g.title + ' ' + g.genre + ' ' + (g.desc || '')).toLowerCase();
-        if (hay.indexOf(state.query) === -1) continue;
-      }
-      filtered.push(g);
-    }
+ function render() {
 
-    let sorted = filtered.slice().sort(function (a, b) {
-      switch (state.sort) {
-        case 'popular': return ((b.popular ? 1 : 0) - (a.popular ? 1 : 0)) || (b.rating - a.rating);
-        case 'newest': return b.id - a.id;
-        case 'price-asc': return a.price - b.price;
-        case 'price-desc': return b.price - a.price;
-        default: return b.rating - a.rating;
-      }
-    });
+  if (!GAMES.length) return;
 
-    $gamesGrid.empty();
-    for (let i = 0; i < sorted.length; i++) {
-      let game = sorted[i];
-      let $card = createCard(game);
-      $gamesGrid.append($card);
-    }
+  let filtered = [...GAMES];
 
-    $resultsInfo.text(sorted.length + ' game' + (sorted.length !== 1 ? 's' : ''));
-    updateCounts();
-    renderCart();
-    renderWishlist();
+  if (state.query) {
+    filtered = filtered.filter(g =>
+      g.title.toLowerCase().includes(state.query) ||
+      g.genre.toLowerCase().includes(state.query)
+    );
+  }
+
+  if (state.genre !== 'all') {
+    filtered = filtered.filter(g => g.genre === state.genre);
+  }
+
+  switch (state.sort) {
+    case 'popular':
+      filtered.sort((a, b) => b.rating - a.rating);
+      break;
+    case 'price-asc':
+      filtered.sort((a, b) => a.price - b.price);
+      break;
+    case 'price-desc':
+      filtered.sort((a, b) => b.price - a.price);
+      break;
+    case 'newest':
+      filtered.sort((a, b) => b.id - a.id);
+      break;
+    default:
+      filtered.sort((a, b) => b.rating - a.rating);
+  }
+
+  const totalPages = Math.ceil(filtered.length / state.perPage) || 1;
+
+  if (state.page > totalPages) state.page = totalPages;
+  if (state.page < 1) state.page = 1;
+
+  const start = (state.page - 1) * state.perPage;
+  const end = start + state.perPage;
+  const pageGames = filtered.slice(start, end);
+
+  $gamesGrid.empty();
+
+  pageGames.forEach(game => {
+    $gamesGrid.append(createCard(game));
+  });
+
+  $resultsInfo.text(`${filtered.length} games found`);
+  $('#pageInfo').text(`Page ${state.page} of ${totalPages}`);
+  $('#prevPage').prop('disabled', state.page === 1);
+  $('#nextPage').prop('disabled', state.page === totalPages);
+
   }
 
   function createCard(game) {
@@ -178,7 +216,6 @@
     html += '</div>';
 
     $card.html(html);
-
     return $card;
   }
 
