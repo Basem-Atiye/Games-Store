@@ -236,6 +236,11 @@ body > * {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
 }
+.icon-btn[href] {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
 
 .icon-btn .badge {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
