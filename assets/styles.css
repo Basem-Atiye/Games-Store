@@ -120,7 +120,7 @@ body > * {
   transition: var(--transition);
 }
 
-/* Animated Brand Logo */
+
 .brand {
   font-weight: 900;
   font-size: 26px;
@@ -150,7 +150,7 @@ body > * {
   transform: scale(1.08);
 }
 
-/* Enhanced Search Bar */
+/*  hay lal Enhanced Search Bar */
 .search-wrap {
   flex: 1;
   max-width: 640px;
@@ -195,13 +195,16 @@ body > * {
   opacity: 0.7;
 }
 
-/* Header Actions */
+/*  hay lal Header Actions */
 .header-actions {
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
+li{
+  list-style: none;
+}
 .icon-btn {
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.05));
   border: 1px solid rgba(139, 92, 246, 0.2);
@@ -290,7 +293,6 @@ body > * {
   box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.1);
 }
 
-/* Skip Link */
 .skip-link {
   position: absolute;
   left: 16px;
