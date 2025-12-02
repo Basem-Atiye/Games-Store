@@ -1,3 +1,6 @@
+// ============================================
+// SECTION 1: GLOBAL STATE & DATA
+// ============================================
 (function () {
   let GAMES = [];
 
@@ -11,6 +14,9 @@
     wishlist: JSON.parse(localStorage.getItem('gamenova_wl') || '{}')
   };
 
+// ============================================
+// SECTION 2: DOM ELEMENTS CACHE
+// ============================================
   let $gamesGrid = $('#gamesGrid');
   let $genreFilter = $('#genreFilter');
   let $sortSelect = $('#sortSelect');
@@ -29,6 +35,9 @@
 
   let lastFocused = null;
 
+// ============================================
+// SECTION 3: DATA LOADING
+// ============================================
   async function loadGames() {
     try {
       const response = await fetch('data/games.json');
@@ -55,9 +64,12 @@
     }
   }
 
+// ============================================
+// SECTION 4: INITIALIZATION
+// ============================================
   function init() {
     populateGenres();
-    bind();
+    bindEvents();
     render();
     $('#year').text(new Date().getFullYear());
   }
@@ -73,62 +85,69 @@
     }
   }
 
-  function bind() {
+// ============================================
+// SECTION 5: EVENT HANDLERS & BINDING
+// ============================================
+  function bindEvents() {
+    // Search & Filter Events
+    $searchInput.on('input', function () {
+      state.query = $(this).val().toLowerCase();
+      state.page = 1;
+      render();
+    });
 
-  $searchInput.on('input', function () {
-    state.query = $(this).val().toLowerCase();
-    state.page = 1;
-    render();
-  });
+    $genreFilter.on('change', function () {
+      state.genre = $(this).val();
+      state.page = 1;
+      render();
+    });
 
-  $genreFilter.on('change', function () {
-    state.genre = $(this).val();
-    state.page = 1;
-    render();
-  });
+    $sortSelect.on('change', function () {
+      state.sort = $(this).val();
+      render();
+    });
 
-  $sortSelect.on('change', function () {
-    state.sort = $(this).val();
-    render();
-  });
+    // Pagination Events
+    $('#nextPage').on('click', function () {
+      state.page++;
+      render();
+    });
 
-  $('#nextPage').on('click', function () {
-    state.page++;
-    render();
-  });
+    $('#prevPage').on('click', function () {
+      state.page--;
+      render();
+    });
 
-  $('#prevPage').on('click', function () {
-    state.page--;
-    render();
-  });
+    // Modal Events
+    $modalClose.on('click', closeModal);
+    $(window).on('click', function (e) {
+      if (e.target === $gameModal[0]) closeModal();
+    });
 
-  $modalClose.on('click', closeModal);
+    // Keyboard Events
+    $(document).on('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeModal();
+        closeDrawers();
+      }
+    });
 
-  $(window).on('click', function (e) {
-    if (e.target === $gameModal[0]) closeModal();
-  });
+    // Game Card Events
+    $gamesGrid.on('click', 'button', function (e) {
+      e.stopPropagation();
+      const id = Number($(this).data('id'));
+      const action = $(this).data('action');
 
-  $(document).on('keydown', function (e) {
-    if (e.key === 'Escape') {
-      closeModal();
-      closeDrawers();
-    }
-  });
+      if (action === 'view') openModal(id);
+      if (action === 'cart') toggleCart(id);
+    });
 
-  $gamesGrid.on('click', 'button', function (e) {
-    e.stopPropagation();
-    const id = Number($(this).data('id'));
-    const action = $(this).data('action');
+    $gamesGrid.on('click', '.card', function () {
+      const id = Number($(this).find('[data-id]').first().data('id'));
+      openModal(id);
+    });
 
-    if (action === 'view') openModal(id);
-    if (action === 'cart') toggleCart(id);
-  });
-
-  $gamesGrid.on('click', '.card', function () {
-    const id = Number($(this).find('[data-id]').first().data('id'));
-    openModal(id);
-  });
-
+    // Navigation & UI Events
     $('#cartBtn').on('click', () => openDrawer('cart'));
     $('#wishlistBtn').on('click', () => openDrawer('wish'));
     $('#cartClose').on('click', () => closeDrawer('cart'));
@@ -139,60 +158,64 @@
     });
   }
 
- function render() {
+// ============================================
+// SECTION 6: RENDER & UI UPDATES
+// ============================================
+  function render() {
+    if (!GAMES.length) return;
 
-  if (!GAMES.length) return;
+    let filtered = [...GAMES];
 
-  let filtered = [...GAMES];
+    // Apply filters
+    if (state.query) {
+      filtered = filtered.filter(g =>
+        g.title.toLowerCase().includes(state.query) ||
+        g.genre.toLowerCase().includes(state.query)
+      );
+    }
 
-  if (state.query) {
-    filtered = filtered.filter(g =>
-      g.title.toLowerCase().includes(state.query) ||
-      g.genre.toLowerCase().includes(state.query)
-    );
-  }
+    if (state.genre !== 'all') {
+      filtered = filtered.filter(g => g.genre === state.genre);
+    }
 
-  if (state.genre !== 'all') {
-    filtered = filtered.filter(g => g.genre === state.genre);
-  }
+    // Apply sorting
+    switch (state.sort) {
+      case 'popular':
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'price-asc':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-desc':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'newest':
+        filtered.sort((a, b) => b.id - a.id);
+        break;
+      default:
+        filtered.sort((a, b) => b.rating - a.rating);
+    }
 
-  switch (state.sort) {
-    case 'popular':
-      filtered.sort((a, b) => b.rating - a.rating);
-      break;
-    case 'price-asc':
-      filtered.sort((a, b) => a.price - b.price);
-      break;
-    case 'price-desc':
-      filtered.sort((a, b) => b.price - a.price);
-      break;
-    case 'newest':
-      filtered.sort((a, b) => b.id - a.id);
-      break;
-    default:
-      filtered.sort((a, b) => b.rating - a.rating);
-  }
+    // Calculate pagination
+    const totalPages = Math.ceil(filtered.length / state.perPage) || 1;
+    if (state.page > totalPages) state.page = totalPages;
+    if (state.page < 1) state.page = 1;
 
-  const totalPages = Math.ceil(filtered.length / state.perPage) || 1;
+    const start = (state.page - 1) * state.perPage;
+    const end = start + state.perPage;
+    const pageGames = filtered.slice(start, end);
 
-  if (state.page > totalPages) state.page = totalPages;
-  if (state.page < 1) state.page = 1;
+    // Render grid
+    $gamesGrid.empty();
+    pageGames.forEach(game => {
+      $gamesGrid.append(createCard(game));
+    });
 
-  const start = (state.page - 1) * state.perPage;
-  const end = start + state.perPage;
-  const pageGames = filtered.slice(start, end);
-
-  $gamesGrid.empty();
-
-  pageGames.forEach(game => {
-    $gamesGrid.append(createCard(game));
-  });
-
-  $resultsInfo.text(`${filtered.length} games found`);
-  $('#pageInfo').text(`Page ${state.page} of ${totalPages}`);
-  $('#prevPage').prop('disabled', state.page === 1);
-  $('#nextPage').prop('disabled', state.page === totalPages);
-
+    // Update UI info
+    $resultsInfo.text(`${filtered.length} games found`);
+    $('#pageInfo').text(`Page ${state.page} of ${totalPages}`);
+    $('#prevPage').prop('disabled', state.page === 1);
+    $('#nextPage').prop('disabled', state.page === totalPages);
   }
 
   function createCard(game) {
@@ -219,6 +242,9 @@
     return $card;
   }
 
+// ============================================
+// SECTION 7: MODAL MANAGEMENT
+// ============================================
   function openModal(id) {
     let g = null;
     for (let i = 0; i < GAMES.length; i++) {
@@ -240,6 +266,7 @@
 
     $modalContent.html(html);
 
+    // Modal button handlers
     $('#modalAdd').on('click', function () {
       toggleCart(g.id);
     });
@@ -250,6 +277,7 @@
       openModal(g.id);
     });
 
+    // Focus management
     lastFocused = document.activeElement;
     $gameModal.attr('aria-hidden', 'false');
     trapFocus($gameModal[0]);
@@ -261,6 +289,9 @@
     if (lastFocused) lastFocused.focus();
   }
 
+// ============================================
+// SECTION 8: DRAWER MANAGEMENT
+// ============================================
   function openDrawer(which) {
     lastFocused = document.activeElement;
     if (which === 'cart') {
@@ -286,6 +317,9 @@
     releaseFocusTrap();
   }
 
+// ============================================
+// SECTION 9: ACCESSIBILITY (FOCUS MANAGEMENT)
+// ============================================
   let trapElement = null;
   let trapKeyHandler = null;
 
@@ -327,6 +361,9 @@
     trapKeyHandler = null;
   }
 
+// ============================================
+// SECTION 10: CART & WISHLIST MANAGEMENT
+// ============================================
   function toggleCart(id) {
     if (state.cart[id]) delete state.cart[id];
     else state.cart[id] = (state.cart[id] || 0) + 1;
@@ -425,6 +462,9 @@
     }
   }
 
+// ============================================
+// SECTION 11: DIAGNOSTICS & UTILITIES
+// ============================================
   function runDiagnostics() {
     let results = [];
     try {
@@ -470,6 +510,9 @@
     $panel.html(html);
   }
 
+// ============================================
+// SECTION 12: ENTRY POINT
+// ============================================
   $(document).ready(function () {
     loadGames();
   });
