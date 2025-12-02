@@ -37,7 +37,6 @@
     /* Added: Ensures panel is above backdrop */
 }
 
-/* Drawer - UPDATED FIX */
 .drawer {
     position: fixed;
     inset: 0;
