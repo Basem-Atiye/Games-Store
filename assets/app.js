@@ -218,8 +218,10 @@
     $('#nextPage').prop('disabled', state.page === totalPages);
   }
 
-  function createCard(game) {
+ function createCard(game) {
     let $card = $('<article>').addClass('card').attr('tabindex', 0);
+    let inCart = !!state.cart[game.id];
+    let cartLabel = inCart ? 'Remove from Cart' : 'Add to Cart';
 
     let html = '';
     html += '<div class="thumb"><img src="' + game.img + '" alt="' + game.title + ' cover" loading="lazy"/></div>';
@@ -234,7 +236,7 @@
     html += '  <div class="pill">' + (game.popular ? 'Popular' : 'Indie') + '</div>';
     html += '  <div>';
     html += '    <button class="btn small" data-action="view" data-id="' + game.id + '">View</button>';
-    html += '    <button class="btn small" data-action="cart" data-id="' + game.id + '">Add</button>';
+    html += '    <button class="btn small" data-action="cart" data-id="' + game.id + '">' + cartLabel + '</button>';
     html += '  </div>';
     html += '</div>';
 
@@ -242,9 +244,6 @@
     return $card;
   }
 
-// ============================================
-// SECTION 7: MODAL MANAGEMENT
-// ============================================
   function openModal(id) {
     let g = null;
     for (let i = 0; i < GAMES.length; i++) {
@@ -316,10 +315,6 @@
     $wishDrawer.attr('aria-hidden', 'true');
     releaseFocusTrap();
   }
-
-// ============================================
-// SECTION 9: ACCESSIBILITY (FOCUS MANAGEMENT)
-// ============================================
   let trapElement = null;
   let trapKeyHandler = null;
 
@@ -360,10 +355,6 @@
     trapElement = null;
     trapKeyHandler = null;
   }
-
-// ============================================
-// SECTION 10: CART & WISHLIST MANAGEMENT
-// ============================================
   function toggleCart(id) {
     if (state.cart[id]) delete state.cart[id];
     else state.cart[id] = (state.cart[id] || 0) + 1;
@@ -372,12 +363,13 @@
     renderCart();
   }
 
-  function toggleWishlist(id) {
-    if (state.wishlist[id]) delete state.wishlist[id];
-    else state.wishlist[id] = true;
-    localStorage.setItem('gamenova_wl', JSON.stringify(state.wishlist));
+  function toggleCart(id) {
+    if (state.cart[id]) delete state.cart[id];
+    else state.cart[id] = (state.cart[id] || 0) + 1;
+    localStorage.setItem('gamenova_cart', JSON.stringify(state.cart));
     updateCounts();
-    renderWishlist();
+    renderCart();
+    render(); 
   }
 
   function updateCounts() {
