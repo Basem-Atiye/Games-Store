@@ -1,0 +1,9 @@
+/* Loading States */
+.loading {
+    background: linear-gradient(90deg,
+            rgba(139, 92, 246, 0.05) 0%,
+            rgba(139, 92, 246, 0.15) 50%,
+            rgba(139, 92, 246, 0.05) 100%);
+    background-size: 200% 100%;
+    animation: shimmerGradient 2s ease-in-out infinite;
+}

@@ -1,0 +1,15 @@
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+}
+
+.page-info {
+    font-weight: 600;
+    color: #fff;
+    font-size: 1rem;
+}

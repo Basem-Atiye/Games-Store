@@ -1,0 +1,93 @@
+/* Responsive Breakpoints */
+@media (max-width: 900px) {
+    .hero-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .hero-art {
+        width: 100%;
+        order: 2;
+        max-width: 100%;
+    }
+
+    .search-wrap {
+        max-width: 100%;
+        order: 3;
+        margin-top: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-inner {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .brand {
+        font-size: 20px;
+    }
+
+    .search-wrap {
+        width: 100%;
+        margin: 12px 0 0 0;
+        order: 3;
+        flex-basis: 100%;
+    }
+
+    .hero {
+        padding: 40px 0 30px;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .header-actions {
+        gap: 6px;
+    }
+
+    .icon-btn {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .filters select {
+        flex: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 12px;
+    }
+
+    .hero-cta {
+        width: 100%;
+    }
+
+    .hero-cta .btn {
+        flex: 1;
+    }
+
+    .drawer-panel {
+        width: 100%;
+        max-width: 100%;
+    }
+}
