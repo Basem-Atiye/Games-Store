@@ -16,6 +16,9 @@
 .modal[aria-hidden="false"] {
     display: flex;
 }
+ .drawer-panel{
+    margin-top: 140px;
+ }
 
 .modal-panel {
     background: linear-gradient(135deg, rgba(15, 23, 36, 0.95) 0%, rgba(10, 14, 26, 0.98) 100%);
