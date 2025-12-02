@@ -414,7 +414,8 @@
         $row.find('[data-action="remove"]').on('click', function () {
           delete state.cart[theId];
           localStorage.setItem('gamenova_cart', JSON.stringify(state.cart));
-          render();
+          updateCounts();
+          renderCart();
         });
       })(id);
 
@@ -454,7 +455,8 @@
         $row.find('[data-action="remove"]').on('click', function () {
           delete state.wishlist[theId];
           localStorage.setItem('gamenova_wl', JSON.stringify(state.wishlist));
-          render();
+          updateCounts();
+          renderWishlist();
         });
       })(id);
 
