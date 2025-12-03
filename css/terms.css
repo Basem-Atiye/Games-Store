@@ -25,9 +25,36 @@
 @media (max-width: 880px) {
   .terms-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 16px;
+    padding: 10px 0 20px;
   }
 }
+
+@media (max-width: 480px) {
+  .terms-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 4px 0 10px;
+  }
+  .doc-card {
+    padding: 8px;
+    font-size: 14px;
+  }
+  .toc {
+    position: static;
+    margin-top: 20px;
+  }
+  .toc nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .toc a {
+    font-size: 13px;
+    padding: 8px 6px;
+  }
+}
+
 .doc-card {
   background: linear-gradient(
     180deg, 
