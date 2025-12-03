@@ -26,9 +26,32 @@
 @media (max-width: 880px) {
   .about-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 16px;
+    padding: 10px 0 20px;
   }
 }
+
+@media (max-width: 480px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 4px 0 10px;
+  }
+  .doc-card {
+    padding: 8px;
+    font-size: 14px;
+  }
+  .about-meta {
+    gap: 6px;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .note-box {
+    padding: 8px;
+    font-size: 13px;
+  }
+}
+
 
 .doc-card {
   background: rgba(15, 23, 36, 0.8);

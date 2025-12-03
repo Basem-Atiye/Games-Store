@@ -210,35 +210,45 @@ body.popup-active::before {
 
 @media (max-width: 768px) {
   .contact-card {
-    padding: 24px;
-    margin: 24px auto;
+    padding: 16px;
+    margin: 12px auto;
   }
-  
   .contact-card h1 {
-    font-size: 28px;
+    font-size: 20px;
   }
-  
   .form-actions {
     flex-direction: column;
+    gap: 8px;
   }
-  
   .form-actions .btn {
     width: 100%;
+    font-size: 15px;
+    padding: 12px 6px;
   }
-  
   .popup-message {
-    width: 90%;
+    width: 98vw;
+    min-width: 90vw;
+    font-size: 15px;
+    padding: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .contact-card {
-    padding: 20px;
-    margin: 16px auto;
+    padding: 8px;
+    margin: 4px auto;
   }
-  
   .message-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 4px;
+  }
+  .form-group input, .form-group textarea {
+    font-size: 14px;
+    padding: 10px 6px;
+  }
+  .btn {
+    font-size: 14px;
+    padding: 12px 6px;
   }
 }
