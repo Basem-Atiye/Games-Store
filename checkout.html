@@ -97,15 +97,91 @@
       </div>
 
       <div>
-        <section class="checkout-section">
-          <h2>Order Summary</h2>
-          <div id="cartItems"></div>
-          <div class="cart-total">
-            <div class="muted">Subtotal: <strong id="subtotal">$0.00</strong></div>
-            <div class="muted">Tax (10%): <strong id="tax">$0.00</strong></div>
-            <div style="margin-top:8px">Total: <strong id="total">$0.00</strong></div>
-          </div>
+        <section class="checkout-section responsive-order-summary"> 
+          <h2>Order Summary</h2> 
+          <div id="cartItems"></div> 
+          <div class="cart-total"> 
+            <div class="muted">Subtotal: <strong id="subtotal">$0.00</strong></div> 
+            <div class="muted">Tax (10%): <strong id="tax">$0.00</strong></div> 
+            <div style="margin-top:8px">Total: <strong id="total">$0.00</strong></div> 
+          </div> 
         </section>
+        <style>
+          .responsive-order-summary {
+            box-sizing: border-box;
+            max-width: 100%;
+            min-width: 0;
+            overflow-x: auto;
+            padding: 18px;
+            border-radius: var(--radius);
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+          }
+          .responsive-order-summary #cartItems {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            min-width: 0;
+          }
+          .responsive-order-summary .cart-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            min-width: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            padding-bottom: 8px;
+          }
+          .responsive-order-summary .cart-item img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+          }
+          .responsive-order-summary .cart-item .title {
+            font-size: 1rem;
+            font-weight: 500;
+            min-width: 0;
+            word-break: break-word;
+          }
+          .responsive-order-summary .cart-item .muted {
+            color: var(--muted);
+            font-size: 0.95rem;
+            min-width: 0;
+            word-break: break-word;
+          }
+          .responsive-order-summary .cart-total {
+            text-align: right;
+            width: 100%;
+            min-width: 0;
+          }
+          @media (max-width: 600px) {
+            .responsive-order-summary {
+              padding: 10px;
+              gap: 10px;
+            }
+            .responsive-order-summary .cart-item img {
+              width: 56px;
+              height: 42px;
+            }
+            .responsive-order-summary .cart-item {
+              gap: 8px;
+              padding-bottom: 6px;
+            }
+            .responsive-order-summary .cart-item .title {
+              font-size: 0.95rem;
+            }
+            .responsive-order-summary .cart-item .muted {
+              font-size: 0.9rem;
+            }
+          }
+        </style>
       </div>
     </div>
   </main>
@@ -124,86 +200,81 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    // Checkout Flow - jQuery Version
-    (function(){
-      // Load cart
-      var cart = JSON.parse(localStorage.getItem('gamenova_cart')||'{}');
-      var games = [
-        {id:1,title:'Neon Drift',price:14.99,img:'assets/cover-1.svg'},
-        {id:2,title:'Starfarer Odyssey',price:29.99,img:'assets/cover-2.svg'},
-        {id:3,title:'Mystic Puzzle',price:7.99,img:'assets/cover-3.svg'},
-        {id:4,title:'Dungeon Tap',price:9.99,img:'assets/cover-4.svg'},
-        {id:5,title:'Shadowline',price:19.99,img:'assets/cover-5.svg'},
-        {id:6,title:'Pixel Ranch',price:12.99,img:'assets/cover-6.svg'}
-      ];
+    document.addEventListener('DOMContentLoaded', function () {
+      // Retrieve cart data from localStorage
+      const cart = JSON.parse(localStorage.getItem('gamenova_cart') || '{}');
+      const cartItemsEl = document.getElementById('cartItems');
+      const subtotalEl = document.getElementById('subtotal');
+      const taxEl = document.getElementById('tax');
+      const totalEl = document.getElementById('total');
+  
+      // Fetch games data
+      fetch('data/games.json')
+        .then(response => response.json())
+        .then(data => {
+          const games = data.games;
+          let subtotal = 0;
+          cartItemsEl.innerHTML = '';
+          Object.keys(cart).forEach(id => {
+            const game = games.find(g => g.id === Number(id));
+            if (!game) return;
+            const qty = cart[id];
+            const itemTotal = game.price * qty;
+            subtotal += itemTotal;
+            cartItemsEl.innerHTML += `
+              <div class="cart-item">
+                <img src="${game.img}" alt="${game.title}" />
+                <div>
+                  <div class="title">${game.title}</div>
+                  <div class="muted">$${game.price.toFixed(2)} × ${qty}</div>
+                </div>
+                <div class="muted">$${itemTotal.toFixed(2)}</div>
+              </div>
+            `;
+          });
+          const tax = subtotal * 0.10;
+          const total = subtotal + tax;
+          subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+          taxEl.textContent = `$${tax.toFixed(2)}`;
+          totalEl.textContent = `$${total.toFixed(2)}`;
+        });
+    });
+    var $form = $('#checkoutForm');
+    var $card = $('#card');
+    var $expiry = $('#expiry');
+    var $successModal = $('#successModal');
 
-      // Render cart
-      var $cartEl = $('#cartItems');
-      var subtotal = 0;
-      $.each(cart, function(id, qty) {
-        var game = null;
-        for(var i = 0; i < games.length; i++){
-          if(games[i].id === Number(id)){ game = games[i]; break; }
-        }
-        if(!game) return;
-        var total = game.price * qty;
-        subtotal += total;
-        var $div = $('<div>').addClass('cart-item');
-        var inner = '';
-        inner += '<img src="' + game.img + '" alt="' + game.title + '">';
-        inner += '<div style="flex:1">';
-        inner += '<div>' + game.title + '</div>';
-        inner += '<div class="muted">$' + game.price.toFixed(2) + ' × ' + qty + '</div>';
-        inner += '</div>';
-        inner += '<div>$' + total.toFixed(2) + '</div>';
-        $div.html(inner);
-        $cartEl.append($div);
-      });
+    // Simple input formatting
+    $card.on('input', function() {
+      var v = $(this).val().replace(/\D/g, '');
+      $(this).val(v.replace(/(\d{4})/g, '$1 ').trim());
+    });
 
-      var tax = subtotal * 0.1;
-      var total = subtotal + tax;
-      $('#subtotal').text('$' + subtotal.toFixed(2));
-      $('#tax').text('$' + tax.toFixed(2));
-      $('#total').text('$' + total.toFixed(2));
+    $expiry.on('input', function() {
+      var v = $(this).val().replace(/\D/g, '');
+      if(v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
+      $(this).val(v);
+    });
 
-      // Form handling
-      var $form = $('#checkoutForm');
-      var $card = $('#card');
-      var $expiry = $('#expiry');
-      var $successModal = $('#successModal');
-
-      // Simple input formatting
-      $card.on('input', function() {
-        var v = $(this).val().replace(/\D/g, '');
-        $(this).val(v.replace(/(\d{4})/g, '$1 ').trim());
-      });
-
-      $expiry.on('input', function() {
-        var v = $(this).val().replace(/\D/g, '');
-        if(v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
-        $(this).val(v);
-      });
-
-      $form.on('submit', function(e) {
-        e.preventDefault();
-        // Mock validation
-        var cardNum = $card.val().replace(/\s/g, '');
-        if(cardNum.length !== 16) {
-          alert('Please enter a valid 16-digit card number');
-          return;
-        }
-        if($expiry.val().length !== 5) {
-          alert('Please enter a valid expiry date (MM/YY)');
-          return;
-        }
-        // Success flow
-        var orderNum = Math.random().toString(36).slice(2, 8).toUpperCase();
-        $('#orderNumber').text(orderNum);
-        $successModal.attr('aria-hidden', 'false');
-        // Clear cart
-        localStorage.removeItem('gamenova_cart');
-      });
-    })();
+    $form.on('submit', function(e) {
+      e.preventDefault();
+      // Mock validation
+      var cardNum = $card.val().replace(/\s/g, '');
+      if(cardNum.length !== 16) {
+        alert('Please enter a valid 16-digit card number');
+        return;
+      }
+      if($expiry.val().length !== 5) {
+        alert('Please enter a valid expiry date (MM/YY)');
+        return;
+      }
+      // Success flow
+      var orderNum = Math.random().toString(36).slice(2, 8).toUpperCase();
+      $('#orderNumber').text(orderNum);
+      $successModal.attr('aria-hidden', 'false');
+      // Clear cart
+      localStorage.removeItem('gamenova_cart');
+    });
   </script>
 </body>
 </html>

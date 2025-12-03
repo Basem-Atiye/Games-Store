@@ -272,8 +272,10 @@
 
     $('#modalWish').on('click', function () {
       toggleWishlist(g.id);
-      render();
-      openModal(g.id);
+      updateCounts();
+      renderWishlist();
+      // Update modal button label
+      $('#modalWish').text(state.wishlist[g.id] ? 'Remove from Wishlist' : 'Add to Wishlist');
     });
 
     // Focus management
@@ -296,9 +298,11 @@
     if (which === 'cart') {
       $cartDrawer.attr('aria-hidden', 'false');
       trapFocus($cartDrawer[0]);
+      renderCart();
     } else {
       $wishDrawer.attr('aria-hidden', 'false');
       trapFocus($wishDrawer[0]);
+      renderWishlist();
     }
     render();
   }
@@ -370,6 +374,17 @@
     updateCounts();
     renderCart();
     render(); 
+  }
+
+  function toggleWishlist(id) {
+    if (state.wishlist[id]) {
+      delete state.wishlist[id];
+    } else {
+      state.wishlist[id] = true;
+    }
+    localStorage.setItem('gamenova_wl', JSON.stringify(state.wishlist));
+    updateCounts();
+    renderWishlist();
   }
 
   function updateCounts() {
