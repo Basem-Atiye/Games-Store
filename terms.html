@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Terms of Service — GameNova</title>
+  
   <link rel="stylesheet" href="css\variables.css">
   <link rel="stylesheet" href="css\base.css">
   <link rel="stylesheet" href="css\layout+conatiner.css">
@@ -22,58 +23,18 @@
   <link rel="stylesheet" href="css\scrollbar.css">
   <link rel="stylesheet" href="css\utilities.css">
   <link rel="stylesheet" href="css\responsiveness.css">
+  <link rel="stylesheet" href="css\terms.css">
   <link rel="icon" href="assets/updated favicon.png" type="img">
-  <style>
-    .page-hero{
-      padding:40px 0 28px
-    }
-    .terms-grid{
-      display:grid;
-      grid-template-columns:1fr 320px;
-      gap:28px;
-      padding:20px 0
-    }
-    @media(max-width:880px){ 
-      .terms-grid{
-        grid-template-columns:1fr
-      } 
-    }
-    .doc-card{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      padding:18px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.03)
-    }
-    .toc{
-      position:sticky;
-      top:84px
-    }
-    .toc a{
-      display:block;
-      padding:8px 10px;
-      border-radius:8px;
-      color:var(--muted);
-      text-decoration:none
-    }
-    .toc a:hover{
-      color:var(--accent)
-    }
-    .lead{
-      color:var(--muted);
-      margin-bottom:14px
-    }
-    h3{
-      color: rgb(108, 193, 193);
-    }
-  </style>
 </head>
 <body>
+  <!-- Header Section -->
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="index.html">GameNova</a>
     </div>
   </header>
 
+  <!-- Main Content -->
   <main class="container">
     <section class="page-hero">
       <div class="hero-inner">
@@ -85,6 +46,7 @@
       </div>
     </section>
 
+    <!-- Terms Grid -->
     <div class="terms-grid">
       <article class="doc-card">
         <h2 id="agreement" style="font-style: italic;">Agreement to Terms</h2>
@@ -106,6 +68,7 @@
         <p style="margin-top:20px"><a href="index.html" class="btn outline">Return to Store</a></p>
       </article>
 
+      <!-- Table of Contents -->
       <aside class="toc">
         <div class="doc-card">
           <h3>On this page</h3>
@@ -121,13 +84,15 @@
     </div>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <p>© <span id="year"></span> GameNova</p>
     </div>
   </footer>
 
+  <!-- JavaScript -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>$(function(){ $('#year').text(new Date().getFullYear()); });</script>
+  <script src="js/terms.js"></script>
 </body>
 </html>

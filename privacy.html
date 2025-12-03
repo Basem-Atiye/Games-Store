@@ -1,9 +1,11 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Privacy Policy — GameNova</title>
+
   <link rel="stylesheet" href="css\variables.css">
   <link rel="stylesheet" href="css\base.css">
   <link rel="stylesheet" href="css\layout+conatiner.css">
@@ -22,53 +24,10 @@
   <link rel="stylesheet" href="css\scrollbar.css">
   <link rel="stylesheet" href="css\utilities.css">
   <link rel="stylesheet" href="css\responsiveness.css">
+  <link rel="stylesheet" href="css/privacy.css">
   <link rel="icon" href="assets/updated favicon.png" type="img">
-  <style>
-    .page-hero{
-      padding:40px 0 28px
-    }
-    .policy-grid{
-      display:grid;
-      grid-template-columns:1fr 320px;
-      gap:28px;
-      padding:20px 0
-    }
-    @media(max-width:880px){ 
-      .policy-grid{
-        grid-template-columns:1fr
-      }
-    }
-    .doc-card{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      padding:18px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.03)
-    }
-    .toc{
-      position:sticky;
-      top:84px
-    }
-    .toc a{
-      display:block;
-      padding:8px 10px;
-      border-radius:8px;
-      color:var(--muted);
-      text-decoration:none
-    }
-    .toc a:hover{
-      color:var(--accent)
-    }
-    .policy-meta{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      margin-bottom:12px
-    }
-    h2{
-      color: aqua;
-    }
-  </style>
 </head>
+
 <body>
   <header class="site-header">
     <div class="container header-inner">
@@ -89,27 +48,35 @@
 
     <div class="policy-grid">
       <article class="doc-card">
-        <div class="policy-meta"><div class="pill">Demo</div><div class="muted">Client-side only</div></div>
+        <div class="policy-meta">
+          <div class="pill">Demo</div>
+          <div class="muted">Client-side only</div>
+        </div>
 
         <h2 id="overview">Overview</h2>
-        <p>GameNova is a demo static storefront created to showcase a modern, responsive UI. This policy explains what the demo stores in your browser and what choices you have.</p>
+        <p>GameNova is a demo static storefront created to showcase a modern, responsive UI. This policy explains what
+          the demo stores in your browser and what choices you have.</p>
 
         <h2 id="local-data">Data we store locally</h2>
         <p>This demo stores minimal data in your browser (localStorage) only:</p>
         <ul>
           <li><strong>Cart</strong> — kept under <code>gamenova_cart</code> to persist items between visits.</li>
           <li><strong>Wishlist</strong> — stored under <code>gamenova_wl</code>.</li>
-          <li><strong>Contact submissions</strong> — saved under <code>gamenova_contacts</code> if you use the contact form (client-side only).</li>
+          <li><strong>Contact submissions</strong> — saved under <code>gamenova_contacts</code> if you use the contact
+            form (client-side only).</li>
         </ul>
 
         <h2 id="tracking">No server-side tracking</h2>
-        <p>This demo does not send analytics, telemetry, or other personal data to a backend. If you integrate third-party services later, those services may collect data .</p>
+        <p>This demo does not send analytics, telemetry, or other personal data to a backend. If you integrate
+          third-party services later, those services may collect data.</p>
 
         <h2 id="choices">Your choices</h2>
-        <p>You can clear local data anytime via browser settings or developer tools. Clearing site storage will remove cart, wishlist and saved messages.</p>
+        <p>You can clear local data anytime via browser settings or developer tools. Clearing site storage will remove
+          cart, wishlist and saved messages.</p>
 
         <h2 id="contact">Contact</h2>
-        <p>If you have questions about this demo's privacy practices, use the <a href="../contact.html">contact page</a>.</p>
+        <p>If you have questions about this demo's privacy practices, use the <a href="../contact.html"
+            class="inline-link">contact page</a>.</p>
 
         <p style="margin-top:20px"><a href="../index.html" class="btn outline">Return to Store</a></p>
       </article>
@@ -136,6 +103,7 @@
   </footer>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>$(function(){ $('#year').text(new Date().getFullYear()); });</script>
+  <script src="js/privacy.js"></script>
 </body>
+
 </html>
