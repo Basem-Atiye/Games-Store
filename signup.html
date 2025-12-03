@@ -44,7 +44,57 @@
     }
   </style>
 </head>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let form = document.querySelector('form');
+      let username = document.getElementById('SignupEmail');
+      let err = document.getElementById('usernameError');
 
+      function validUsername(v) {
+        v = v || '';
+        let lengthOk = v.trim().length >= 10;
+        let hasUpper = /[A-Z]/.test(v);
+        let digitCount = (v.match(/\d/g) || []).length;
+        return lengthOk && hasUpper && digitCount >= 2;
+      }
+
+      function errorText(v) {
+        v = v || '';
+        if (v.trim().length < 10) return 'Username must be at least 10 characters.';
+        if (!/[A-Z]/.test(v)) return 'Username must include at least one uppercase letter.';
+        if ((v.match(/\d/g) || []).length < 2) return 'Username must include at least two numbers.';
+        return '';
+      }
+
+      form.addEventListener('submit', function (e) {
+        const val = username.value.trim();
+        const msg = errorText(val);
+        if (msg) {
+          e.preventDefault();
+          err.textContent = msg;
+          err.style.display = 'block';
+          username.style.outline = '2px solid rgba(255,139,139,0.6)';
+          username.focus();
+        } else {
+          err.style.display = 'none';
+          username.style.outline = '';
+        }
+      });
+
+      username.addEventListener('input', function () {
+        let val = username.value;
+        let msg = errorText(val);
+        if (msg) {
+          err.textContent = msg;
+          err.style.display = 'block';
+          username.style.outline = '2px solid rgba(255,139,139,0.35)';
+        } else {
+          err.style.display = 'none';
+          username.style.outline = '2px solid rgba(124,255,144,0.35)';
+        }
+      });
+    });
+  </script>
 <body>
 
   <header class="site-header">
@@ -55,8 +105,8 @@
 
   <main class="container">
     <div class="contact-card">
-      <h1>Login</h1>
-      <p class="muted">Login to access your GameNova account.</p>
+      <h1>Signup</h1>
+      <p class="muted"> Signup to access your new GameNova account.</p>
 
       <form>
 
@@ -70,9 +120,13 @@
           <input id="loginPass" type="password" required placeholder="Enter your password" />
         </div>
 
-        <button type="submit" class="btn primary">Login</button>
-         <a id="LoginBtn" class="icon-btn" href="signup.html" title="Login">Signup</a>
-        <p style="margin-top:20px"><a href="signup.html" class="btn outline">Return to Store</a></p>
+         <div class="form-group">
+        <label for="SignupEmail">User name (should require: 10 characters , at least one capitan letter, and 2 numbers)</label>
+          <input id="SignupEmail" type="email" required placeholder="type a user name you want to use" />
+       </div>
+
+        <button type="submit" class="btn primary" >Signup</button>
+        <p style="margin-top:20px"><a href="../index.html" class="btn outline">Return to Store</a></p>
       </form>
     </div>
   </main>
