@@ -1,26 +1,15 @@
-/*
- * Legal Pages JavaScript
- * Shared functionality for Terms and Privacy Policy pages
- */
-
 $(function() {
-  // Initialize legal page
   initLegalPage();
   
   function initLegalPage() {
-    // Update year in footer
     updateFooterYear();
     
-    // Initialize table of contents
     initTableOfContents();
     
-    // Initialize smooth scrolling
     initSmoothScrolling();
     
-    // Initialize section highlighting
     initSectionHighlighting();
     
-    // Add active class for current hash
     highlightCurrentSection();
   }
   
@@ -29,7 +18,6 @@ $(function() {
   }
   
   function initTableOfContents() {
-    // Add click handler for TOC links
     $('.toc a').on('click', function(e) {
       e.preventDefault();
       
@@ -37,13 +25,10 @@ $(function() {
       const $target = $(targetId);
       
       if ($target.length) {
-        // Update active link
         updateActiveLink($(this));
         
-        // Smooth scroll to section
         smoothScrollTo($target);
         
-        // Update URL without jump
         updateUrlHash(targetId);
       }
     });
@@ -55,7 +40,7 @@ $(function() {
   }
   
   function smoothScrollTo($element) {
-    const offset = 80; // Account for fixed header
+    const offset = 80;
     const duration = 500;
     
     $('html, body').animate({
@@ -72,7 +57,6 @@ $(function() {
   }
   
   function initSmoothScrolling() {
-    // Add smooth scrolling for all anchor links within the document
     $('a[href^="#"]').not('.toc a').on('click', function(e) {
       const href = $(this).attr('href');
       if (href !== '#') {
@@ -123,7 +107,6 @@ $(function() {
     }
   }
   
-  // Utility function: debounce
   function debounce(func, wait) {
     let timeout;
     return function() {
@@ -135,8 +118,6 @@ $(function() {
       }, wait);
     };
   }
-  
-  // Add CSS for animations
   $('<style>').text(`
     /* Highlight animation for target sections */
     .doc-card h2:target,
