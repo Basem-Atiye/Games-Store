@@ -4,41 +4,26 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checkout — GameNova Store</title>
-  <link rel="stylesheet" href="css\variables.css">
-  <link rel="stylesheet" href="css\base.css">
-  <link rel="stylesheet" href="css\layout+conatiner.css">
-  <link rel="stylesheet" href="css\header.css">
-  <link rel="stylesheet" href="css\search+controls.css">
-  <link rel="stylesheet" href="css\hero.css">
-  <link rel="stylesheet" href="css\buttons+interactivity.css">
-  <link rel="stylesheet" href="css\cards+gamesgrid.css">
-  <link rel="stylesheet" href="css\controls+filtering.css">
-  <link rel="stylesheet" href="css\modals+overlays.css">
-  <link rel="stylesheet" href="css\pagination.css">
-  <link rel="stylesheet" href="css\footer.css">
-  <link rel="stylesheet" href="css\accessibility.css">
-  <link rel="stylesheet" href="css\animations.css">
-  <link rel="stylesheet" href="css\loadingstates.css">
-  <link rel="stylesheet" href="css\scrollbar.css">
-  <link rel="stylesheet" href="css\utilities.css">
-  <link rel="stylesheet" href="css\responsiveness.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout+conatiner.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/search+controls.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/buttons+interactivity.css">
+  <link rel="stylesheet" href="css/cards+gamesgrid.css">
+  <link rel="stylesheet" href="css/controls+filtering.css">
+  <link rel="stylesheet" href="css/modals+overlays.css">
+  <link rel="stylesheet" href="css/pagination.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/accessibility.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/loadingstates.css">
+  <link rel="stylesheet" href="css/scrollbar.css">
+  <link rel="stylesheet" href="css/utilities.css">
+  <link rel="stylesheet" href="css/responsiveness.css">
+  <link rel="stylesheet" href="css/checkout.css">
   <link rel="icon" href="assets/updated favicon.png" type="img">
-  <style>
-    .checkout-grid { display: grid; gap: 24px; padding: 24px 0 48px; }
-    @media (min-width: 768px) { .checkout-grid { grid-template-columns: 1fr 320px; } }
-    .checkout-section { background: var(--glass); border: 1px solid rgba(255,255,255,0.03); border-radius: var(--radius); padding: 18px; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; margin-bottom: 6px; }
-    .form-group input, .form-group select { width: 100%; padding: 10px; background: var(--glass-2); border: 1px solid rgba(255,255,255,0.04); color: inherit; border-radius: 8px; }
-    .form-row { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
-    .cart-item { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-    .cart-item img { width: 80px; height: 60px; object-fit: cover; border-radius: 6px; }
-    .cart-total { margin-top: 12px; text-align: right; }
-    .steps { display: flex; gap: 2px; margin-bottom: 24px; }
-    .step { flex: 1; padding: 12px; text-align: center; background: var(--glass-2); color: var(--muted); }
-    .step.active { background: var(--glass); color: var(--accent); }
-    .step.done { background: var(--glass); color: var(--accent-2); }
-  </style>
 </head>
 <body>
   <header class="site-header">
@@ -75,7 +60,7 @@
               </div>
             </div>
 
-            <h2 style="margin: 24px 0 16px">Payment Details</h2>
+            <h2 class="payment-heading">Payment Details</h2>
             <div class="form-group">
               <label for="card">Card Number</label>
               <input type="text" id="card" required placeholder="4111 1111 1111 1111" maxlength="19">
@@ -91,7 +76,7 @@
               </div>
             </div>
 
-            <button type="submit" class="btn primary" style="width:100%;margin-top:24px">Complete Purchase</button>
+            <button type="submit" class="btn primary checkout-btn">Complete Purchase</button>
           </form>
         </section>
       </div>
@@ -103,179 +88,26 @@
           <div class="cart-total"> 
             <div class="muted">Subtotal: <strong id="subtotal">$0.00</strong></div> 
             <div class="muted">Tax (10%): <strong id="tax">$0.00</strong></div> 
-            <div style="margin-top:8px">Total: <strong id="total">$0.00</strong></div> 
+            <div class="total-amount">Total: <strong id="total">$0.00</strong></div> 
           </div> 
         </section>
-        <style>
-          .responsive-order-summary {
-            box-sizing: border-box;
-            max-width: 100%;
-            min-width: 0;
-            overflow-x: auto;
-            padding: 18px;
-            border-radius: var(--radius);
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.03);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-          }
-          .responsive-order-summary #cartItems {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 100%;
-            min-width: 0;
-          }
-          .responsive-order-summary .cart-item {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            min-width: 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            padding-bottom: 8px;
-          }
-          .responsive-order-summary .cart-item img {
-            width: 80px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 6px;
-            flex-shrink: 0;
-          }
-          .responsive-order-summary .cart-item .title {
-            font-size: 1rem;
-            font-weight: 500;
-            min-width: 0;
-            word-break: break-word;
-          }
-          .responsive-order-summary .cart-item .muted {
-            color: var(--muted);
-            font-size: 0.95rem;
-            min-width: 0;
-            word-break: break-word;
-          }
-          .responsive-order-summary .cart-total {
-            text-align: right;
-            width: 100%;
-            min-width: 0;
-          }
-          @media (max-width: 600px) {
-            .responsive-order-summary {
-              padding: 10px;
-              gap: 10px;
-            }
-            .responsive-order-summary .cart-item img {
-              width: 56px;
-              height: 42px;
-            }
-            .responsive-order-summary .cart-item {
-              gap: 8px;
-              padding-bottom: 6px;
-            }
-            .responsive-order-summary .cart-item .title {
-              font-size: 0.95rem;
-            }
-            .responsive-order-summary .cart-item .muted {
-              font-size: 0.9rem;
-            }
-          }
-        </style>
       </div>
     </div>
   </main>
 
   <div id="successModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
     <div class="modal-panel" role="document">
-      <div style="text-align:center;padding:24px">
-        <div style="font-size:48px;margin-bottom:12px">🎮</div>
+      <div class="modal-content">
+        <div class="modal-icon">🎮</div>
         <h2>Thank you for your order!</h2>
         <p class="muted">Order #<span id="orderNumber"></span></p>
         <p>We've sent a confirmation email with your order details.</p>
-        <button onclick="window.location.href='index.html'" class="btn primary" style="margin-top:24px">Return to Store</button>
+        <button onclick="window.location.href='index.html'" class="btn primary return-btn">Return to Store</button>
       </div>
     </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Retrieve cart data from localStorage
-      const cart = JSON.parse(localStorage.getItem('gamenova_cart') || '{}');
-      const cartItemsEl = document.getElementById('cartItems');
-      const subtotalEl = document.getElementById('subtotal');
-      const taxEl = document.getElementById('tax');
-      const totalEl = document.getElementById('total');
-  
-      // Fetch games data
-      fetch('data/games.json')
-        .then(response => response.json())
-        .then(data => {
-          const games = data.games;
-          let subtotal = 0;
-          cartItemsEl.innerHTML = '';
-          Object.keys(cart).forEach(id => {
-            const game = games.find(g => g.id === Number(id));
-            if (!game) return;
-            const qty = cart[id];
-            const itemTotal = game.price * qty;
-            subtotal += itemTotal;
-            cartItemsEl.innerHTML += `
-              <div class="cart-item">
-                <img src="${game.img}" alt="${game.title}" />
-                <div>
-                  <div class="title">${game.title}</div>
-                  <div class="muted">$${game.price.toFixed(2)} × ${qty}</div>
-                </div>
-                <div class="muted">$${itemTotal.toFixed(2)}</div>
-              </div>
-            `;
-          });
-          const tax = subtotal * 0.10;
-          const total = subtotal + tax;
-          subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-          taxEl.textContent = `$${tax.toFixed(2)}`;
-          totalEl.textContent = `$${total.toFixed(2)}`;
-        });
-    });
-    var $form = $('#checkoutForm');
-    var $card = $('#card');
-    var $expiry = $('#expiry');
-    var $successModal = $('#successModal');
-
-    $card.on('input', function() {
-      var v = $(this).val().replace(/\D/g, '');
-      $(this).val(v.replace(/(\d{4})/g, '$1 ').trim());
-    });
-
-    $expiry.on('input', function() {
-      var v = $(this).val().replace(/\D/g, '');
-      if(v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
-      $(this).val(v);
-    });
-
-    $form.on('submit', function(e) {
-      e.preventDefault();
-      // Mock validation
-      var cardNum = $card.val().replace(/\s/g, '');
-      if(cardNum.length !== 16) {
-        alert('Please enter a valid 16-digit card number');
-        return;
-      }
-      if($expiry.val().length !== 5) {
-        alert('Please enter a valid expiry date (MM/YY)');
-        return;
-      }
-      // Success flow
-      var orderNum = Math.random().toString(36).slice(2, 8).toUpperCase();
-      $('#orderNumber').text(orderNum);
-      $successModal.attr('aria-hidden', 'false');
-      // Clear cart
-      localStorage.removeItem('gamenova_cart');
-    });
-  </script>
-</body>
-</html>
+  <script src="js/checkout.js"></script>
 </body>
 </html>
