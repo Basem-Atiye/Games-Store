@@ -15,10 +15,41 @@
 
 @media (max-width: 480px) {
     .games {
-        grid-template-columns: repeat(1fr);
-        gap: 12px;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 0 4px 32px;
+    }
+    .card {
+        padding: 8px;
+        border-radius: 12px;
+    }
+    .thumb {
+        height: 80px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+    .meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    .title {
+        font-size: 13px;
+    }
+    .price {
+        font-size: 15px;
+    }
+    .card-footer {
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 8px;
+    }
+    .pill {
+        font-size: 11px;
+        padding: 5px 8px;
     }
 }
+
 
 /* Card Design */
 .card {
