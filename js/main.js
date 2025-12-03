@@ -523,6 +523,12 @@
 // SECTION 12: ENTRY POINT
 // ============================================
   $(document).ready(function () {
+    state.cart = JSON.parse(localStorage.getItem('gamenova_cart') || '{}');
+    state.wishlist = JSON.parse(localStorage.getItem('gamenova_wl') || '{}');
+    updateCounts();
+    renderCart();
+    renderWishlist();
+    render();
     loadGames();
   });
 
