@@ -74,6 +74,10 @@
 }
 
 @media (max-width: 480px) {
+
+    h1.titleIndex{
+        margin-top: 70px;
+    }
     .container {
         padding: 0 8px;
     }
